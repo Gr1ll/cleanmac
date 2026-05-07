@@ -40,6 +40,28 @@ fn dir_size(path: &PathBuf) -> u64 {
         .sum()
 }
 
+fn delete_contents(path: &PathBuf, label: &str) {
+    let entries = match fs::read_dir(path) {
+        Ok(e) => e,
+        Err(e) => { eprintln!("  Failed to read {}: {}", label, e); return; }
+    };
+    let mut deleted = 0u64;
+    let mut failed = 0u64;
+    for entry in entries.filter_map(|e| e.ok()) {
+        let p = entry.path();
+        let result = if p.is_dir() { fs::remove_dir_all(&p) } else { fs::remove_file(&p) };
+        match result {
+            Ok(_) => deleted += 1,
+            Err(_) => failed += 1,
+        }
+    }
+    if failed > 0 {
+        println!("  Cleared {} ({} items skipped — in use or protected)", label, failed);
+    } else {
+        println!("  Cleared {} ({} items)", label, deleted);
+    }
+}
+
 pub fn run(all: bool, dry_run: bool) {
     let targets = targets();
 
@@ -87,17 +109,14 @@ pub fn run(all: bool, dry_run: bool) {
             true
         } else {
             Confirm::new()
-                .with_prompt(format!("Delete {} ({})? [y/N]", target.name, ByteSize(*size)))
+                .with_prompt(format!("Delete {} ({})?", target.name, ByteSize(*size)))
                 .default(false)
                 .interact()
                 .unwrap_or(false)
         };
 
         if should_delete {
-            match fs::remove_dir_all(&target.path) {
-                Ok(_) => println!("  Deleted {}", target.name),
-                Err(e) => eprintln!("  Failed to delete {}: {}", target.name, e),
-            }
+            delete_contents(&target.path, target.name);
         }
     }
 }

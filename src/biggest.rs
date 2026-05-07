@@ -79,7 +79,7 @@ pub fn run(path: Option<String>, depth: Option<usize>) {
 
     let max_display_depth = depth.unwrap_or(usize::MAX);
 
-    let mut candidates: Vec<(PathBuf, u64, bool)> = Vec::new(); // (path, size, is_dir)
+    let mut candidates: Vec<(PathBuf, u64, bool)> = Vec::new();
 
     for (dir_path, size) in &dir_sizes {
         if dir_path == &root {
