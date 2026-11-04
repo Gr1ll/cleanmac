@@ -89,7 +89,7 @@ pub fn run(all: bool, dry_run: bool) {
 
     let total: u64 = results.iter().map(|(_, s)| s).sum();
     println!("{}", "─".repeat(90));
-    println!("{:<26} {:>12}", "Total", ByteSize(total));
+    println!("{:<26} {:>12}", "Total", ByteSize(total).display().si().to_string());
     println!();
 
     if dry_run {
@@ -109,7 +109,7 @@ pub fn run(all: bool, dry_run: bool) {
             true
         } else {
             Confirm::new()
-                .with_prompt(format!("Delete {} ({})?", target.name, ByteSize(*size)))
+                .with_prompt(format!("Delete {} ({})?", target.name, ByteSize(*size).display().si()))
                 .default(false)
                 .interact()
                 .unwrap_or(false)

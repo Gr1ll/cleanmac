@@ -1,7 +1,7 @@
 use bytesize::ByteSize;
 
 pub fn human_size(bytes: u64) -> String {
-    ByteSize(bytes).to_string()
+    ByteSize(bytes).display().si().to_string()
 }
 
 pub fn print_biggest_header() {
