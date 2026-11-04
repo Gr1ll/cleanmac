@@ -26,3 +26,12 @@ pub fn print_cache_row(name: &str, size: u64, path: &str) {
     };
     println!("{:<26} {:>12}  {}", name, size_str, path);
 }
+
+pub fn print_apps_header() {
+    println!("\n{:<34} {:<10}  {}", "App", "Source", "Path");
+    println!("{}", "─".repeat(90));
+}
+
+pub fn print_apps_row(name: &str, source: &str, path: &str) {
+    println!("{:<34} {:<10}  {}", name, source, path);
+}

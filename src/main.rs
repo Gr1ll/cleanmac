@@ -1,5 +1,6 @@
 use clap::{Parser, Subcommand};
 
+mod apps;
 mod biggest;
 mod caches;
 mod display;
@@ -24,6 +25,7 @@ enum Commands {
         #[arg(long)]
         depth: Option<usize>,
     },
+    Apps,
 }
 
 fn main() {
@@ -31,5 +33,6 @@ fn main() {
     match cli.command {
         Commands::Caches { all, dry_run } => caches::run(all, dry_run),
         Commands::Biggest { path, depth } => biggest::run(path, depth),
+        Commands::Apps => apps::run(),
     }
 }
